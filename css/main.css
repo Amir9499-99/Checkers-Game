@@ -10,8 +10,7 @@
 .board {
     width: 560px;
     height: 560px;
-    margin: 0 auto;
-    margin: 100px 0 0 370px;
+    margin: 8px 0 0 440px;
     float: left;
 }
 .black-board{
@@ -45,10 +44,10 @@
     grid-gap: 40px;
     grid-auto-rows: 100px;
     float: left;
-    margin: 210px 0 0 80px;
+    margin: 110px 0 0 80px;
  }
  button{
-     width: 120px;
+     width: 15s0px;
      height: 35px;
      text-align: center;
      background-color: black;
@@ -58,17 +57,31 @@ h4{
     color: white;
     width: 120px;
 }
-.whitepeg{
+.blue-peg{
     width: 50px;
     height: 50px;  
     background-color: #4169E1;
     border-radius: 50%;
     margin: 10px auto;
 }
-.blackpeg{
+.gold-peg{
     width: 50px;
     height: 50px;  
     background-color: #DAA520  ;
     border-radius: 50%;
     margin: 10px auto;
+}
+.empty{
+    width: 50px;
+    height: 50px;  
+    background-color:black;
+    border-radius: 50%;
+    margin: 10px auto;
+
+}
+h2, h3{
+    text-align: center;
+    color: white;
+    background-color: darkslategray;
+
 }
