@@ -83,5 +83,12 @@ h2, h3{
     text-align: center;
     color: white;
     background-color: darkslategray;
+}
 
+.selected-peg{
+    width: 50px;
+    height: 50px;  
+    background-color: red;
+    border-radius: 50%;
+    margin: 10px auto;
 }

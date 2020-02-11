@@ -1,56 +1,61 @@
-// Cached elements
-blackBoard = document.querySelectorAll('.black-board');
-const bluePeg = document.querySelectorAll('.blue-peg');
-const goldPeg = document.querySelectorAll('.gold-peg');
-const empty = document.querySelectorAll('.empty');
-
-//Constants
-const players = {
-    empty: empty,
-    bluePeg: 1,
-    goldPeg: -1,
-    king: false,
-    
+class Piece {
+    constructor(player){
+        this.player = player;
+        this.isKing = false;
+    }
+    move(){
+    }
 }
 
+// Cached elements
+const sqrEls = document.querySelectorAll('.board > div.black-board');
+const msgEl = document.querySelector('h3');
+
+//EventListeners
+document.querySelector('.board').addEventListener('click', handleBoardClick);
+
 //Variables
-let turn, winner, score, board
+let turn, winner, score, board, selectedPiece;
 
 function init(){
     board = new Array(32).fill(null);
-    // for (let i = 0; i < 12; i++) board[i] = new players(1);
-    // for (let i = 19; i < 32; i++) board[i] = new players(-1);
+    for (let i = 0; i < 12; i++) board[i] = new Piece(1);
+    for (let i = 20; i < 32; i++) board[i] = new Piece(-1);
     turn =  1
-    console.log(turn)
-    win = null;
+    console.log(board)
+    winner = null;
+    selectedPiece = null;
+    render();
 }
-
-
-function removeEl(){
-    
-    for (let i=0; i < blackBoard.length; i++){
-   blackBoard[i].addEventListener('click', function(r){
-       if(r.target.classList.contains("empty")){
-           console.log("THIS IS THE CURRENT TURN: ", turn)
-           r.target.classList.remove('empty')
-           r.target.classList.add(turn === 1 ? 'blue-peg' : 'gold-peg')
-           flipTurn()
-        }  else if(r.target.classList.remove('blue-peg')){
-            console.log('blue run')
-            r.target.classList.remove('blue-peg')
-            r.target.classList.add('empty')
-            } else {
-                r.target.classList.remove('gold-peg')
-                r.target.classList.add('empty')
-            }
-         })     
-    }
-};
-
 init()
-removeEl()
 
 function flipTurn (){
     turn *= -1;
-    console.log("Turn flip")
+    console.log("Turn fliped")
+}
+
+function renderBoard(){
+    sqrEls.forEach(function(el, idx){
+        let cls;
+        if(!board[idx]){
+            cls = 'empty';
+        } else if(board[idx] === selectedPiece){
+            cls = 'selected-peg';
+        } else if(board[idx].player === 1){
+            cls = 'blue-peg';
+        } else if(board[idx].player === -1){
+            cls = 'gold-peg';
+        } 
+        el.innerHTML = `<div class="${cls}"></div>`;
+
+    });
+}
+
+function render(){
+    renderBoard();
+    msgEl.textContent = `It's ${turn === 1 ? "Blue's" : "Gold's"} turn`
+}
+
+function handleBoardClick(evt){
+    
 }
