@@ -85,10 +85,19 @@ h2, h3{
     background-color: darkslategray;
 }
 
-.selected-peg{
+.selected-peg-blue{
     width: 50px;
     height: 50px;  
-    background-color: red;
+    background-color: #4169E1;
+    border: solid #B22222 3px;
+    border-radius: 50%;
+    margin: 10px auto;
+}
+.selected-peg-gold{
+    width: 50px;
+    height: 50px;  
+    background-color:#DAA520;
+    border: solid #B22222 3px;
     border-radius: 50%;
     margin: 10px auto;
 }
