@@ -1,87 +1,3 @@
-// class Piece {
-//     constructor(player){
-//         this.player = player;
-//         this.isKing = false;
-//     }
-//     move(){
-//     }
-// }
-
-// // Cached elements
-// const sqrEls = document.querySelectorAll('.board > div.black-board');
-// const msgEl = document.querySelector('h3');
-
-// //EventListeners
-// sqrEls.forEach((square, idx) => square.addEventListener('click',(e) => handleBoardClick(e, idx)));
-
-// //Variables
-// let winner, score, board, selectedPiece;
-// let turn = 0;
-
-// function init(){
-//     displayTurn()
-//     board = new Array(32).fill(null);
-//     for (let i = 0; i < 12; i++) board[i] = new Piece(0);
-//     for (let i = 20; i < 32; i++) board[i] = new Piece(1);
-//     // console.log(board)
-//     winner = null;
-//     selectedPiece = null;
-//     render();
-// }
-// init()
-
-// function renderBoard(){
-//     sqrEls.forEach(function(el, idx){
-//         let cls;
-//         if(!board[idx]){
-//             cls = 'empty';
-//         } else if(board[idx] === selectedPiece){
-//             cls = 'selected-peg';
-//         } else if(board[idx].player === 0){
-//             cls = 'blue-peg';
-//         } else if(board[idx].player === 1){
-//             cls = 'gold-peg';
-//         } 
-//         el.innerHTML = `<div class="${cls}"></div>`;
-
-//     });
-// }
-
-// function render(){
-//     renderBoard();
-// }
-
-// function handleBoardClick(evt, idx){
-//     if (evt.target.className !== 'black-board'){
-//         if (evt.target.className === 'blue-peg' && turn%2 === 0){
-//             evt.target.classList.remove('blue-peg');   
-//             evt.target.classList.add('empty');   
-//         }else if(evt.target.className === 'gold-peg' && turn%2 === 1){
-//             evt.target.classList.remove('gold-peg')
-//             evt.target.classList.add('selected-peg-gold')
-//         }else if(evt.target.className === 'empty' && turn%2 === 0){
-//             evt.target.classList.remove('empty')
-//             evt.target.classList.add('blue-peg');
-//             flipTurn()
-//             displayTurn()
-//         }else{
-//             evt.target.classList.remove('empty')
-//             evt.target.classList.add('gold-peg');
-//             flipTurn()
-//             displayTurn()
-//         }   
-//     }
-// }
-
-// function flipTurn(){
-//     turn++;
-// }
-
-// function displayTurn(){
-//     msgEl.textContent = `It's ${(turn % 2 === 0) ? "Blue's" : "Gold's"} turn`
-// }
-
-
 class Game {
     constructor() {
         this.size = 8;
@@ -97,6 +13,7 @@ class Game {
         ];
         this.container = document.querySelector('.board');
         this.render();
+        this.activePiece = null;
     }
 
     render() {
@@ -108,31 +25,78 @@ class Game {
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
                 square = document.createElement('div');
-
-                switch (this.board[i][j]) {
-                    case 1: {
-                        piece = document.createElement('div');
-                        piece.classList.add('blue-piece');
-                        square.appendChild(piece);
-                        break;
-                    } 
-                    case 2: {
-                        piece = document.createElement('div');
-                        piece.classList.add('gold-piece');
-                        square.appendChild(piece);
-                        break;
-                    }
-                }
+                square.setAttribute('data-x', i);
+                square.setAttribute('data-y', j);
+                square.addEventListener('click', this.handleSquareClick.bind(this));
 
                 if ((i + j)%2 === 0) {
                     square.classList.add('white-board');
                 } else {
                     square.classList.add('black-board');
                 }
+
+                switch (this.board[i][j]) {
+                    case 1: {
+                        piece = document.createElement('div');
+                        piece.classList.add('blue-piece');
+                        piece.addEventListener('click', this.handlePieceClick.bind(this));
+                        square.appendChild(piece);
+                        break;
+                    } 
+                    case 2: {
+                        piece = document.createElement('div');
+                        piece.classList.add('gold-piece');
+                        piece.addEventListener('click', this.handlePieceClick.bind(this));
+                        square.appendChild(piece);
+                        break;
+                    }
+                }
                 
                 this.container.appendChild(square);
             }
         }
+    }
+
+    handlePieceClick(event) {
+        const x = event.target.parentElement.getAttribute('data-x');
+        const y = event.target.parentElement.getAttribute('data-y');
+
+        this.activePiece = {x, y};
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    handleSquareClick(event) {
+        const x = event.target.getAttribute('data-x');
+        const y = event.target.getAttribute('data-y');
+        const value = this.board[this.activePiece.x][this.activePiece.y];
+
+        if (event.target.childNodes.length > 0) return;
+
+        switch(value) {
+            case 1: {
+                // First condition restricts movement upward, left, right.
+                // Second condition restricts movement straight downward.
+                if (x - this.activePiece.x === 1 && Math.abs(y - this.activePiece.y) === 1) {
+                    this.board[x][y] = value;
+                    this.board[this.activePiece.x][this.activePiece.y] = 0;
+                }
+
+                break;
+            }
+            case 2: {
+                if (x - this.activePiece.x === -1 && Math.abs(y - this.activePiece.y) === 1) {
+                    this.board[x][y] = value;
+                    this.board[this.activePiece.x][this.activePiece.y] = 0;
+                }
+
+                break;
+            }
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        this.render();
     }
 }
 
