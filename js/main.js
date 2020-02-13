@@ -19,6 +19,7 @@ class Game {
     render() {
         let square;
         let piece;
+        let turn = 1;       
 
         this.container.innerHTML = "";
 
@@ -72,7 +73,7 @@ class Game {
         const value = this.board[this.activePiece.x][this.activePiece.y];
 
         if (event.target.childNodes.length > 0) return;
-
+        console.log('click to 0')
         switch(value) {
             case 1: {
                 // First condition restricts movement upward, left, right.
