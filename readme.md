@@ -9,6 +9,6 @@ Single pieces are always limited to forward moves (toward the opponent). A piece
 
 Html / CSS / JavaScript
 
-### PLay Game
+### Play Game
 
 [Click link to play a game](https://amir9499-99.github.io/Checkers-Game/)
