@@ -33,13 +33,12 @@ class Game {
     renderBoard() {
         let tile;
         let piece;    
-
+        let click = 'clicked'
         this.container.innerHTML = ""; 
         this.turnDisplay.innerHTML = "Now is player " + this.turn + " turn"; 
-      
-
-        for (let i = 0; i < this.size; i++) {
-            for (let j = 0; j < this.size; j++) {
+        this.playAgain.addEventListener('click', this.game);  
+                for (let i = 0; i < this.size; i++) {
+                for (let j = 0; j < this.size; j++) {
                 tile = document.createElement('div');
                 tile.setAttribute('data-x', i);
                 tile.setAttribute('data-y', j);
@@ -204,7 +203,7 @@ class Game {
 
         if (this.blueCount === 0) alert('Gold Win!');
         else if (this.goldCount === 0) alert('Blue Win!');
-        this.playAgain.addEventListener('click', this.render);
+        
     }
 }
 
