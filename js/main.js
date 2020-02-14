@@ -14,6 +14,7 @@ class Game {
         this.container = document.querySelector('.board');
         this.blueScoreContainer = document.querySelector('.blue-score');
         this.goldScoreContainer = document.querySelector('.gold-score');
+        this.turnDisplay = document.querySelector('h3');
         this.activePiece = null;
         this.winner = null;
         this.blueCount = 0;
@@ -32,7 +33,9 @@ class Game {
         let tile;
         let piece;    
 
-        this.container.innerHTML = "";
+        this.container.innerHTML = ""; 
+        this.turnDisplay.innerHTML = "Now is player " + this.turn + " turn"; 
+      
 
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
@@ -147,16 +150,20 @@ class Game {
         if (x - this.activePiece.x === 2
             && Math.abs(y - this.activePiece.y) === 2) {
             this.strikePiece(x, y, value);
-        }
+            this.flipTurn()
+       }
+       
     }
-
+    
     handleStrikeUp(x, y, value) {
         if (x - this.activePiece.x === -2
             && Math.abs(y - this.activePiece.y) === 2) {
             this.strikePiece(x, y, value);
+            this.flipTurn()
         }
+       
     }
-
+    
     movePiece(x, y, value) {
         this.board[x][y] = value;
         this.board[this.activePiece.x][this.activePiece.y] = 0;
