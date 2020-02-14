@@ -19,6 +19,7 @@ class Game {
         this.blueCount = 0;
         this.goldCount = 0;
         this.turn = 1;
+
         this.render();
     }
 
@@ -86,6 +87,7 @@ class Game {
         if (this.board[x][y] !== this.turn) return;
 
         this.activePiece = {x, y};
+
         event.preventDefault();
         event.stopPropagation();
     }
@@ -105,6 +107,7 @@ class Game {
                 // Gold pieces strike up only.
                 this.handleStrikeDown(x, y, value);
                 this.flipTurn();
+
                 break;
             }
             case 2: {
@@ -113,6 +116,7 @@ class Game {
                 // Blue pieces stike down only.
                 this.handleStrikeUp(x, y, value);
                 this.flipTurn();
+
                 break;
             }
         }
@@ -180,6 +184,9 @@ class Game {
     }
 
     trackWinner() {
+        this.blueCount = 0;
+        this.goldCount = 0;
+
         for (const row of this.board) {
             for (const piece of row) {
                 if (piece === 1) this.blueCount++;
