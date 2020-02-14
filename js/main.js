@@ -13,6 +13,7 @@ class Game {
         ];
         this.container = document.querySelector('.board');
         this.activePiece = null;
+        this.turn = 1;
         this.render();
     }
 
@@ -61,6 +62,9 @@ class Game {
         const x = Number(event.target.parentElement.getAttribute('data-x'));
         const y = Number(event.target.parentElement.getAttribute('data-y'));
 
+        // It is not your turn;
+        if (this.board[x][y] !== this.turn) return;
+
         this.activePiece = {x, y};
         event.preventDefault();
         event.stopPropagation();
@@ -68,6 +72,7 @@ class Game {
 
     handleTileClick(event) {
         if (event.target.childNodes.length > 0) return;
+        if (!this.activePiece) return;
 
         const x = Number(event.target.getAttribute('data-x'));
         const y = Number(event.target.getAttribute('data-y'));
@@ -79,6 +84,7 @@ class Game {
                 this.handleMoveDown(x, y, value);
                 // Gold pieces strike up only.
                 this.handleStrikeDown(x, y, value);
+                this.flipTurn();
                 break;
             }
             case 2: {
@@ -86,6 +92,7 @@ class Game {
                 this.handleMoveUp(x, y, value);
                 // Blue pieces stike down only.
                 this.handleStrikeUp(x, y, value);
+                this.flipTurn();
                 break;
             }
         }
@@ -138,12 +145,17 @@ class Game {
         const strikedValue = this.board[strikedX][strikedY];
 
         // Piece of one color can't strike the piece of the same color.
-        if (strikedValue === value) return;
+        if (strikedValue === 0 || strikedValue === value) return;
 
+        this.flipTurn();
         this.board[x][y] = value;
         // The striked piece is removed from the game.
         this.board[strikedX][strikedY] = 0;
         this.board[this.activePiece.x][this.activePiece.y] = 0;
+    }
+
+    flipTurn() {
+        this.turn = this.turn === 1 ? 2 : 1;
     }
 }
 
