@@ -38,12 +38,12 @@
     border-radius: 50%;
 }
 
-.black-board{
+.black-tile{
     background-color: black;
     float: left;
     color: white;
 }
-.white-board{
+.white-tile{
     background-color: white;
     float: left;
     color: black;

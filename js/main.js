@@ -12,27 +12,27 @@ class Game {
             [2, 0, 2, 0, 2, 0, 2, 0],
         ];
         this.container = document.querySelector('.board');
-        this.render();
         this.activePiece = null;
+        this.render();
     }
 
     render() {
-        let square;
+        let tile;
         let piece;
 
         this.container.innerHTML = "";
 
         for (let i = 0; i < this.size; i++) {
             for (let j = 0; j < this.size; j++) {
-                square = document.createElement('div');
-                square.setAttribute('data-x', i);
-                square.setAttribute('data-y', j);
-                square.addEventListener('click', this.handleSquareClick.bind(this));
+                tile = document.createElement('div');
+                tile.setAttribute('data-x', i);
+                tile.setAttribute('data-y', j);
+                tile.addEventListener('click', this.handleTileClick.bind(this));
 
                 if ((i + j)%2 === 0) {
-                    square.classList.add('white-board');
+                    tile.classList.add('white-tile');
                 } else {
-                    square.classList.add('black-board');
+                    tile.classList.add('black-tile');
                 }
 
                 switch (this.board[i][j]) {
@@ -40,66 +40,111 @@ class Game {
                         piece = document.createElement('div');
                         piece.classList.add('blue-piece');
                         piece.addEventListener('click', this.handlePieceClick.bind(this));
-                        square.appendChild(piece);
+                        tile.appendChild(piece);
                         break;
                     } 
                     case 2: {
                         piece = document.createElement('div');
                         piece.classList.add('gold-piece');
                         piece.addEventListener('click', this.handlePieceClick.bind(this));
-                        square.appendChild(piece);
+                        tile.appendChild(piece);
                         break;
                     }
                 }
                 
-                this.container.appendChild(square);
+                this.container.appendChild(tile);
             }
         }
     }
 
     handlePieceClick(event) {
-        const x = event.target.parentElement.getAttribute('data-x');
-        const y = event.target.parentElement.getAttribute('data-y');
+        const x = Number(event.target.parentElement.getAttribute('data-x'));
+        const y = Number(event.target.parentElement.getAttribute('data-y'));
 
         this.activePiece = {x, y};
         event.preventDefault();
         event.stopPropagation();
     }
 
-    handleSquareClick(event) {
-        const x = event.target.getAttribute('data-x');
-        const y = event.target.getAttribute('data-y');
-        const value = this.board[this.activePiece.x][this.activePiece.y];
-
+    handleTileClick(event) {
         if (event.target.childNodes.length > 0) return;
+
+        const x = Number(event.target.getAttribute('data-x'));
+        const y = Number(event.target.getAttribute('data-y'));
+        const value = this.board[this.activePiece.x][this.activePiece.y];
 
         switch(value) {
             case 1: {
-                // First condition restricts movement upward, left, right.
-                // Second condition restricts movement straight downward.
-                if (x - this.activePiece.x === 1 && Math.abs(y - this.activePiece.y) === 1) {
-                    this.board[x][y] = value;
-                    this.board[this.activePiece.x][this.activePiece.y] = 0;
-                }
-
+                // Gold pieces move up only.
+                this.handleMoveDown(x, y, value);
+                // Gold pieces strike up only.
+                this.handleStrikeDown(x, y, value);
                 break;
             }
             case 2: {
-                if (x - this.activePiece.x === -1 && Math.abs(y - this.activePiece.y) === 1) {
-                    this.board[x][y] = value;
-                    this.board[this.activePiece.x][this.activePiece.y] = 0;
-                }
-
+                // Blue pieces move down only.
+                this.handleMoveUp(x, y, value);
+                // Blue pieces stike down only.
+                this.handleStrikeUp(x, y, value);
                 break;
             }
         }
 
         event.preventDefault();
         event.stopPropagation();
+
         this.render();
+    }
+
+    handleMoveDown(x, y, value) {
+        // First condition restricts movement upward, left, right.
+        // Second condition restricts movement straight downward.
+        if (x - this.activePiece.x === 1
+            && Math.abs(y - this.activePiece.y) === 1) {
+            this.movePiece(x, y, value);
+        }
+    }
+
+    handleMoveUp(x, y, value) {
+        if (x - this.activePiece.x === -1
+            && Math.abs(y - this.activePiece.y) === 1) {
+            this.movePiece(x, y, value);
+        }
+    }
+
+    handleStrikeDown(x, y, value) {
+        if (x - this.activePiece.x === 2
+            && Math.abs(y - this.activePiece.y) === 2) {
+            this.strikePiece(x, y, value);
+        }
+    }
+
+    handleStrikeUp(x, y, value) {
+        if (x - this.activePiece.x === -2
+            && Math.abs(y - this.activePiece.y) === 2) {
+            this.strikePiece(x, y, value);
+        }
+    }
+
+    movePiece(x, y, value) {
+        this.board[x][y] = value;
+        this.board[this.activePiece.x][this.activePiece.y] = 0;
+    }
+
+    strikePiece(x, y, value) {
+        // Striked piece location.
+        const strikedX = (x + this.activePiece.x) / 2;
+        const strikedY = (y + this.activePiece.y) / 2;
+        const strikedValue = this.board[strikedX][strikedY];
+
+        // Piece of one color can't strike the piece of the same color.
+        if (strikedValue === value) return;
+
+        this.board[x][y] = value;
+        // The striked piece is removed from the game.
+        this.board[strikedX][strikedY] = 0;
+        this.board[this.activePiece.x][this.activePiece.y] = 0;
     }
 }
 
 const game = new Game();
-
-
