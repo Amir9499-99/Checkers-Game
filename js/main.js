@@ -12,12 +12,22 @@ class Game {
             [2, 0, 2, 0, 2, 0, 2, 0],
         ];
         this.container = document.querySelector('.board');
+        this.blueScoreContainer = document.querySelector('.blue-score');
+        this.goldScoreContainer = document.querySelector('.gold-score');
         this.activePiece = null;
+        this.winner = null;
+        this.blueCount = 0;
+        this.goldCount = 0;
         this.turn = 1;
         this.render();
     }
 
     render() {
+        this.renderBoard();
+        this.renderScore();
+    }
+
+    renderBoard() {
         let tile;
         let piece;    
 
@@ -56,6 +66,16 @@ class Game {
                 this.container.appendChild(tile);
             }
         }
+    }
+
+    renderScore() {
+        this.blueScoreContainer.innerHTML = "";
+        this.goldScoreContainer.innerHTML = "";
+        
+        this.trackWinner();
+        
+        this.blueScoreContainer.innerHTML = this.blueCount;
+        this.goldScoreContainer.innerHTML = this.goldCount;
     }
 
     handlePieceClick(event) {
@@ -144,6 +164,7 @@ class Game {
         const strikedY = (y + this.activePiece.y) / 2;
         const strikedValue = this.board[strikedX][strikedY];
 
+        // Also it cannot jump over empty tile.
         // Piece of one color can't strike the piece of the same color.
         if (strikedValue === 0 || strikedValue === value) return;
 
@@ -156,6 +177,18 @@ class Game {
 
     flipTurn() {
         this.turn = this.turn === 1 ? 2 : 1;
+    }
+
+    trackWinner() {
+        for (const row of this.board) {
+            for (const piece of row) {
+                if (piece === 1) this.blueCount++;
+                else if (piece === 2) this.goldCount++;
+            }
+        }
+
+        if (this.blueCount === 0) alert('Gold Win!');
+        else if (this.goldCount === 0) alert('Blue Win!');
     }
 }
 

@@ -48,6 +48,12 @@
     float: left;
     color: black;
 }
+
+.blue-score, .gold-score {
+    color: white;
+    font-size: 24px;
+}
+
 .player1{
     grid-column: 1 ;
     grid-row: 1/3;
