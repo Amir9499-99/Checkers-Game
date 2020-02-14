@@ -18,7 +18,7 @@ class Game {
 
     render() {
         let tile;
-        let piece;
+        let piece;    
 
         this.container.innerHTML = "";
 
